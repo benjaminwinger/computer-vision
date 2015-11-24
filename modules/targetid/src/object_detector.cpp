@@ -1,9 +1,9 @@
-/* 
+/*
     This file is part of WARG's computer-vision
 
     Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
     All rights reserved.
- 
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
     1. Redistributions of source code must retain the above copyright
@@ -33,6 +33,7 @@
 #include "pixel_target.h"
 #include <vector>
 #include "frame.h"
+#include "shadow.h"
 
 using namespace std;
 using namespace cv;
@@ -53,12 +54,12 @@ void ObjectDetector::process_frame(Frame * f){
         double area;
         double perimeter;
         Scalar colour;
-        Point2d error;
+        Shadow * error;
         double errorAngle;
 
         // get info from contours/image
 
-        PixelTarget * p = new PixelTarget(type, centroid, area, perimeter, colour, error, errorAngle);
+        PixelTarget * p = new PixelTarget(type, centroid, area, perimeter, colour, error);
         f->add_target(p);
     }
 }

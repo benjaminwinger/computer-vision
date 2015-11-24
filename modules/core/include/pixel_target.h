@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of WARG's computer-vision
 
     Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
@@ -11,9 +11,9 @@
     2. Redistributions in binary form must reproduce the above copyright
        notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
-    3. Usage of this code MUST be explicitly referenced to WARG and this code 
+    3. Usage of this code MUST be explicitly referenced to WARG and this code
        cannot be used in any competition against WARG.
-    4. Neither the name of the WARG nor the names of its contributors may be used 
+    4. Neither the name of the WARG nor the names of its contributors may be used
        to endorse or promote products derived from this software without specific
        prior written permission.
 
@@ -28,12 +28,12 @@
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-	
+
 #ifndef PIXEL_TARGET_H_INCLUDED
 #define PIXEL_TARGET_H_INCLUDED
 
 /**
- * @file pixel_target.h
+ * @class PixelTarget
  *
  * @brief Container class for storing information about
  *        targets located in photos or video frames using pixels as measurement
@@ -44,17 +44,11 @@
 #include <vector>
 
 class Frame;
+class Shadow;
 
 class PixelTarget{
 public:
-    PixelTarget(std::string type, cv::Point2d centroid, double area, double perimeter, cv::Scalar colour, cv::Point2d error, double errorAngle);
-    
-    /**
-     * @brief Getter for type field
-     *
-     * @return Type std::string associated with the PixelTarget
-     */
-    std::string get_type();
+    PixelTarget(std::string type, cv::Point2d centroid, double area, double perimeter, cv::Scalar colour, Shadow * error);
 
     /**
      * @brief Getter for centroid
@@ -89,61 +83,44 @@ public:
      *
      * @return 2D error magnitude of the PixelTarget's location
      */
-    cv::Point2d get_error();
-
-    /**
-     * @brief Getter for error angle
-     *
-     * @return Angle in radians between the direction of the error and the vertical
-     */
-    double get_error_angle();
+    Shadow & get_error();
 
     /**
      * @brief Getter for image
      *
      * @return Frame associated with this PixelTarget
      */
-    Frame * get_image();
+    Frame & get_image();
 private:
-    /**
-     * @brief PixelTarget type description 
-     */
-    std::string type;
-
     /**
      * @brief Pixel locations of the vertices of the PixelTarget
      */
     std::vector<cv::Point> contour;
-    
+
     /**
      * @brief Pixel location of the centre of the PixelTarget
      */
     cv::Point2d centroid;
-    
+
     /**
      * @brief area of the target in pixels
      */
     double area;
 
     /**
-     * @brief perimeter of the target in pixels 
+     * @brief perimeter of the target in pixels
      */
     double perimeter;
-    
+
     /**
      * @brief Colour of the target in BGR (Blue, Green, Red) format
      */
     cv::Scalar colour;
-    
+
     /**
-     * @brief Calculated location error of the target as a 2D rectangle in pixels
+     * @brief Calculated location error of the target
      */
-    cv::Point2d error;
-    
-    /**
-     * @brief Angle of the error as radians clockwise from vertical
-     */
-    double errorAngle;
+    Shadow * error;
 
     /**
      * @brief Frame described by this PixelTarget

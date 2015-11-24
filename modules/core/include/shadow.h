@@ -29,36 +29,52 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "pixel_target.h"
-#include "shadow.h"
+#ifndef SHADOW_H_INCLUDED
+#define SHADOW_H_INCLUDED
 
-using namespace cv;
-using std::string;
+/**
+ *  @class Shadow
+ *
+ *  Represents the possible locations of a target in degrees of latitude and longitude
+ */
+class Shadow {
+public:
 
-PixelTarget::PixelTarget(string type, Point2d centroid, double area, double perimeter, Scalar colour, Shadow * error){
+    /**
+     *  Combines the two given shadows into a single shadow that represents the
+     *  possible locations that the two Shadows have in common
+     *
+     *  @param first shadow to be combined
+     *  @param second shadow to be combined
+     *  @return a new Shadow object representing the combination of the two shadows
+     */
+    static Shadow * combine(Shadow & first, Shadow & second);
 
-}
+    /**
+     *  Constructor for shadow
+     *
+     *  @param location Location of the shadow
+     *  @param bounds Contour marking the bounds of the shadow
+     */
+    Shadow(cv::Point * location, std::vector<cv::Point *> * bounds);
 
-cv::Point2d PixelTarget::get_centroid(){
-    return centroid;
-}
+    /**
+     *  Returns the estimated location of the Target
+     *  @return Location of the Target
+     */
+    cv::Point * get_location();
 
-double PixelTarget::get_area(){
-    return area;
-}
+    /**
+     *  Returns the estimated error of the target in metres
+     *  @return Error of target in metres
+     */
+    cv::Point * get_error();
 
-double PixelTarget::get_perimeter(){
-    return perimeter;
-}
+protected:
 
-cv::Scalar PixelTarget::get_colour(){
-    return colour;
-}
+private:
+    cv::Point * location;
+    std::vector<cv::Point> * bounds;
+};
 
-Shadow & PixelTarget::get_error(){
-    return *error;
-}
-
-Frame & PixelTarget::get_image(){
-    return *image;
-}
+#endif // SHADOW_H_INCLUDED

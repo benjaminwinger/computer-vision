@@ -62,16 +62,6 @@ struct Metadata{
     double lon;
     
     /**
-     * @brief Error associated with the latitude 
-     */
-    double latError;
-    
-    /**
-     * @brief Error associated with the longitude
-     */
-    double lonError;
-
-    /**
      * @brief Pitch of the camera at time of frame capture
      */
     double pitch;
@@ -105,16 +95,6 @@ struct Metadata{
      * @brief heading of the plane at time of frame capture
      */
     double heading;
-    
-    /**
-     * @brief error associated with the plane's altitude
-     */
-    double altError;
-    
-    /**
-     * @brief Error associated with the plane's heading
-     */
-    double headingError;
 };
 
 

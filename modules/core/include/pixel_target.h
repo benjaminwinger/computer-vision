@@ -48,7 +48,7 @@ class Shadow;
 
 class PixelTarget{
 public:
-    PixelTarget(std::string type, cv::Point2d centroid, double area, double perimeter, cv::Scalar colour, Shadow * error);
+    PixelTarget(std::string type, cv::Point2d centroid, double area, double perimeter, cv::Scalar colour);
 
     /**
      * @brief Getter for centroid
@@ -77,13 +77,6 @@ public:
      * @return Average colour of the interiour of the PixelTarget's contour
      */
     cv::Scalar get_colour();
-
-    /**
-     * @brief Getter for error
-     *
-     * @return 2D error magnitude of the PixelTarget's location
-     */
-    Shadow & get_error();
 
     /**
      * @brief Getter for image
@@ -116,11 +109,6 @@ private:
      * @brief Colour of the target in BGR (Blue, Green, Red) format
      */
     cv::Scalar colour;
-
-    /**
-     * @brief Calculated location error of the target
-     */
-    Shadow * error;
 
     /**
      * @brief Frame described by this PixelTarget

@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of WARG's computer-vision
 
     Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
@@ -11,9 +11,9 @@
     2. Redistributions in binary form must reproduce the above copyright
        notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
-    3. Usage of this code MUST be explicitly referenced to WARG and this code 
+    3. Usage of this code MUST be explicitly referenced to WARG and this code
        cannot be used in any competition against WARG.
-    4. Neither the name of the WARG nor the names of its contributors may be used 
+    4. Neither the name of the WARG nor the names of its contributors may be used
        to endorse or promote products derived from this software without specific
        prior written permission.
 
@@ -28,14 +28,14 @@
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-	
+
 #ifndef TARGET_H_INCLUDED
 #define TARGET_H_INCLUDED
 
 /**
-  * @file target.h
+  * @class Target
   *
-  * @brief Container class for storing information about
+  * Container class for storing information about
   *     identified targets in real-world measurements
   *     Adding PixelTargets consolidates their information
   *     into the Target
@@ -50,7 +50,7 @@ class PixelTarget;
 class Target{
 public:
     Target(std::string type);
-   
+
     /**
      * @brief Getter for Target image
      *
@@ -96,16 +96,9 @@ public:
     /**
      * @brief Getter for error
      *
-     * @return 2D error magnitude of the Target's location in metres
+     * @return error of target
      */
-    cv::Point2f get_error();
-
-    /**
-     * @brief Getter for error angle
-     *
-     * @return Angle in radians between the direction of the error and North
-     */
-    double get_error_angle();
+    Shadow & get_error();
 
     /**
      * @brief Adds given PixelTarget to Target's storage
@@ -118,7 +111,7 @@ public:
     /**
      * @brief Getter for pixel Targets
      *
-     * @return Array containing all of the PixelTargets that were used to 
+     * @return Array containing all of the PixelTargets that were used to
      *         create this instance of Target
      */
     PixelTarget * [] get_pixel_targets();
@@ -135,7 +128,7 @@ private:
     double imageQuality;
 
     /**
-     * @brief PixelTarget type description 
+     * @brief PixelTarget type description
      */
     std::string type;
 
@@ -143,7 +136,7 @@ private:
      * @brief GPS co-ordinates of the centre of the Target
      */
     cv::Point2f centroid;
-    
+
     /**
      * @brief area of the target in square metres
      */
@@ -153,21 +146,19 @@ private:
      * @brief perimeter of the target in metres
      */
     double perimeter;
-    
+
     /**
      * @brief Colour of the target in BGR (Blue, Green, Red) format
      */
     cv::Scalar colour;
-    
+
     /**
-     * @brief Calculated location error of the target as a 2D rectangle in metres
+     * @brief Calculated location error of the target
+     *
+     * Location error is calculated using the combination of the location information
+     * in all of the enclosed p
      */
-    cv::Point2f error;
-    
-    /**
-     * @brief Angle of the error as degrees clockwise from North
-     */
-    double error-angle;
+    Shadow * error;
 
     /**
      * @brief PixelTargets used to form this Target instance

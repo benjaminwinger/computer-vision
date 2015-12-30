@@ -1,9 +1,9 @@
-/* 
+/*
     This file is part of WARG's computer-vision
 
     Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
     All rights reserved.
- 
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
     1. Redistributions of source code must retain the above copyright
@@ -63,9 +63,10 @@ class TargetTest : public Test<Frame &, vector<Point> * > {
             if(results->size() > 0) {
                 result = new vector<Point>(results->at(0));
             }
+            cout << *result << endl;
             return result;
         }
-        
+
         double deviation(vector<Point> * results[], vector<Point> * expected, int n) {
             double variance = 0;
             for(int i = 0; i < n; i++) {
@@ -96,14 +97,15 @@ class TargetTest : public Test<Frame &, vector<Point> * > {
         }
 
         vector<Point> * mean(vector<Point> * results[], int n) {
-            vector<Point> * mean = new vector<Point>(n);
+            vector<Point> * mean = new vector<Point>();
             for(int i = 0; i < n; i++) {
                 vector<Point> * result = results[i];
                 if(result == NULL) continue;
                 for(int j = 0; j < result->size(); j++) {
-                    mean->assign(i, Point(result->at(j).x/n, result->at(j).y/n));
+                    mean->assign(j, Point((mean->size() > j ? mean->at(j).x : 0) + (float)(result->at(j).x)/n, (mean->size() > j ? mean->at(j).y : 0) + (float)(result->at(j).y)/n));
                 }
             }
+            cout << "Mean is: " << *mean << endl;
             return mean;
         }
 };

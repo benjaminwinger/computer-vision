@@ -54,12 +54,11 @@ void ObjectDetector::process_frame(Frame * f){
         double area;
         double perimeter;
         Scalar colour;
-        Shadow * error;
         double errorAngle;
 
         // get info from contours/image
 
-        PixelTarget * p = new PixelTarget(type, centroid, area, perimeter, colour, error);
+        PixelTarget * p = new PixelTarget(type, centroid, area, perimeter, colour);
         f->add_target(p);
     }
 }

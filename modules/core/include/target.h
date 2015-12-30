@@ -46,6 +46,7 @@
 #include <vector>
 
 class PixelTarget;
+class Shadow;
 
 class Target{
 public:
@@ -114,7 +115,7 @@ public:
      * @return Array containing all of the PixelTargets that were used to
      *         create this instance of Target
      */
-    PixelTarget * [] get_pixel_targets();
+    std::vector<PixelTarget *> & get_pixel_targets();
 private:
 
     /**

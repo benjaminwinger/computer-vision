@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of WARG's computer-vision
 
     Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
@@ -29,4 +29,24 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <opencv2/core/core.hpp>
+#include <vector>
+#include "target.h"
+#include "shadow.h"
 
+using cv::Point;
+using std::vector;
+
+
+
+void Target::add_pixel_target(PixelTarget * t) {
+    Point location;
+    vector<Point *> bounds;
+
+    // TODO: Calculate co-ordinates of target and shadow bounds
+
+    Shadow s(location, bounds);
+    Shadow * tmp = Shadow::combine(s, *this->error);
+    delete this->error;
+    this->error = tmp;
+}

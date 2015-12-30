@@ -35,7 +35,7 @@
 using namespace cv;
 using std::string;
 
-PixelTarget::PixelTarget(string type, Point2d centroid, double area, double perimeter, Scalar colour, Shadow * error){
+PixelTarget::PixelTarget(string type, Point2d centroid, double area, double perimeter, Scalar colour){
 
 }
 
@@ -53,10 +53,6 @@ double PixelTarget::get_perimeter(){
 
 cv::Scalar PixelTarget::get_colour(){
     return colour;
-}
-
-Shadow & PixelTarget::get_error(){
-    return *error;
 }
 
 Frame & PixelTarget::get_image(){

@@ -56,7 +56,7 @@ public:
      *  @param location Location of the shadow
      *  @param bounds Contour marking the bounds of the shadow
      */
-    Shadow(cv::Point * location, std::vector<cv::Point *> * bounds);
+    Shadow(cv::Point & location, std::vector<cv::Point *> & bounds);
 
     /**
      *  Returns the estimated location of the Target

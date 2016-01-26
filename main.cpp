@@ -72,7 +72,7 @@ void worker(Frame* f) {
     assert(!f->get_img().empty());
     identifier.process_frame(f);
 
-    workers--;
+workers--;
 }
 
 void read_images() {
@@ -121,8 +121,8 @@ void output() {
     }
 }
 
-void init() { 
-    logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info); 
+void init() {
+    logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);
 }
 
 int main(int argc, char** argv) {

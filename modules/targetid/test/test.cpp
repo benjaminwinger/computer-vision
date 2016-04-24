@@ -35,6 +35,7 @@
 #include <boost/log/trivial.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "opencv2/core/ocl.hpp"
 #include <vector>
 #include <iostream>
 #include "target_identifier.h"
@@ -93,6 +94,18 @@ BOOST_AUTO_TEST_CASE(KMeansAndCanny) {
     benchmark_function("k_means", [&]() { filter->filter(f.get_img()); }, 10);
     Mat * filtered = filter->filter(f.get_img());
     benchmark_function("Canny", [&]() { ccreator->get_contours(*filtered); }, 10);
+    Mat structuringElement = getStructuringElement(MORPH_ELLIPSE, Size(40, 40));
+    Mat tmp1, tmp2;
+const int lowThreshold = 60;
+const int ratio = 3;
+const int kernelSize = 3;
+    Canny( *filtered, tmp1, lowThreshold, lowThreshold*ratio, kernelSize );
+    benchmark_function("Closure", [&]() { morphologyEx(tmp1, tmp2, cv::MORPH_CLOSE, structuringElement);}, 10);
+    cv::ocl::setUseOpenCL(true);
+    BOOST_TEST_MESSAGE("OpenCL:" << cv::ocl::haveOpenCL());
+    UMat tmp3, tmp4;
+    Canny( *filtered, tmp3, lowThreshold, lowThreshold*ratio, kernelSize );
+    benchmark_function("Closure - OpenCL", [&]() { morphologyEx(tmp3, tmp4, cv::MORPH_CLOSE, structuringElement);}, 10);
     delete filtered;
     delete filter;
     delete ccreator;

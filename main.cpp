@@ -49,6 +49,7 @@
 #include "pictureimport.h"
 #include "metadata_input.h"
 #include "target.h"
+#include "video_import.h"
 
 using namespace std;
 using namespace boost;
@@ -104,6 +105,7 @@ void read_images() {
             Frame* f = importer->next_frame();
             if (f) {
                 in_buffer.push(f);
+                BOOST_LOG_TRIVIAL(trace) << "Adding frame to buffer";
             }
             else {
                 hasMoreFrames = false;
@@ -194,7 +196,8 @@ int handle_args(int argc, char** argv) {
             ("addr,a", po::value<string>(), "Address to connect to to recieve telemetry log")
             ("port,p", po::value<string>(), "Port to connect to to recieve telemetry log")
             ("output,o", po::value<string>(), "Directory to store output files; default is current directory")
-            ("intermediate", "When this is enabled, program will output intermediary frames that contain objects of interest");
+            ("intermediate", "When this is enabled, program will output intermediary frames that contain objects of interest")
+            ("videofile,f", po::value<string>(), "Path to video file to read frames from");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, description), vm);
@@ -204,8 +207,7 @@ int handle_args(int argc, char** argv) {
             cout << description << endl;
             return 1;
         }
-
-        int devices = vm.count("video") + vm.count("decklink") + vm.count("images");
+        int devices = vm.count("video") + vm.count("decklink") + vm.count("images") + vm.count("videofile");
         if (devices > 1) {
             cout << "Invalid options: You can only specify one image source at a time" << endl;
             return 1;
@@ -233,6 +235,11 @@ int handle_args(int argc, char** argv) {
         if (vm.count("images")) {
             string path = vm["images"].as<string>();
             importer = new PictureImport(path, logReader);
+        }
+
+        if (vm.count("videofile")) {
+            string path = vm["videofile"].as<string>();
+            importer = new VideoImport(path, logReader);
         }
 
         if (vm.count("output")) {

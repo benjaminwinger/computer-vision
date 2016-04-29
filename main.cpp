@@ -84,6 +84,12 @@ MetadataInput * logReader = NULL;
 double aveFrameTime = 1000;
 int frameCount = 0;
 
+enum CameraType { GoProStock, TypeUndefined }
+
+Mat map1, map2;
+
+CameraType type = TypeUndefined;
+
 void worker(Frame* f) {
     auto start = std::chrono::steady_clock::now();
     workers++;
@@ -91,6 +97,11 @@ void worker(Frame* f) {
     identifier.process_frame(f);
     if (intermediate && f->get_objects().size() > 0) {
         intermediate_buffer.push(f);
+    }
+
+    if (type != TypeUndefined) {
+        // Frame::get_img() really shouldn't be modifyable. Also this should probably be done when importing the images
+        remap(f->get_img(), f->get_img(), map1, map2, INTER_CUBIC);
     }
 
     workers--;
@@ -203,7 +214,10 @@ int handle_args(int argc, char** argv) {
             ("port,p", po::value<string>(), "Port to connect to to recieve telemetry log")
             ("output,o", po::value<string>(), "Directory to store output files; default is current directory")
             ("intermediate", "When this is enabled, program will output intermediary frames that contain objects of interest")
-            ("videofile,f", po::value<string>(), "Path to video file to read frames from");
+            ("videofile,f", po::value<string>(), "Path to video file to read frames from")
+            ("goprostock", "When this is enabled program will fix distortion for the stock GoPro Hero 3 lens")
+            ("sizex,x", po::value<int>(), "Horizontal Size to resize image after importing. Must be used when lens calibration is also used")
+            ("sizey,y", po::value<int>(), "Vertical Size to resize image after importing. Must be used when lens calibration is also used");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, description), vm);
@@ -254,6 +268,16 @@ int handle_args(int argc, char** argv) {
 
         if (vm.count("intermediate")) {
             intermediate = true;
+        }
+
+        if (vm.count("goprostock")) {
+            if (!vm.count("sizex") || !vm.count("sizey")) {
+                cout << "Invalid options, when using lens calibration you must specify size of frames" << endl;
+            }
+            type = GoProStock;
+            Mat cameraMatrix, distCoeffs; // Calculate these!
+            Size size(vm["sizex"].as<int>(), vm["sizey"].as<int>());
+            initUndistortRectifyMap(cameraMatrix, distCoeffs, Mat(), cameraMatrix, size, CV_32FC1, map1, map2);
         }
     }
     catch (std::exception& e) {

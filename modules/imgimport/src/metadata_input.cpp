@@ -58,7 +58,10 @@ void MetadataInput::read_log() {
         }
         int eol;
         if ((eol = buffer.find_first_of('\n')) != string::npos) {
-            string line = buffer.substr(0, eol);
+            int begin = 0, end = eol;
+            if (buffer[0] == '(') begin = 1;
+            if (buffer[eol - 1] == ')') end = eol - 1;
+            string line = buffer.substr(begin, end);
             buffer = buffer.substr(eol + 1, string::npos);
             BOOST_LOG_TRIVIAL(debug) << "reading line " << line;
             if (heads.size() == 0) {

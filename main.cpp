@@ -38,6 +38,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/program_options.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <queue>
 #include <chrono>
 #include <iostream>
@@ -84,22 +85,28 @@ MetadataInput * logReader = NULL;
 double aveFrameTime = 1000;
 int frameCount = 0;
 
-enum CameraType { GoProStock, TypeUndefined }
+enum CameraType { GoProStock, TypeUndefined };
 
 Mat map1, map2;
 
-CameraType type = TypeUndefined;
+CameraType cameraType = TypeUndefined;
 
 void worker(Frame* f) {
     auto start = std::chrono::steady_clock::now();
     workers++;
-    assert(!f->get_img().empty());
-    identifier.process_frame(f);
-    if (intermediate && f->get_objects().size() > 0) {
-        intermediate_buffer.push(f);
+    if (!f->get_img().empty()) {
+        BOOST_LOG_TRIVIAL(debug) << "Processing frame of size: " << f->get_img().size();
+        identifier.process_frame(f);
+        if (intermediate && f->get_objects().size() > 0) {
+            intermediate_buffer.push(f);
+        }
+    } else {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(aveFrameTime/processors));
+        workers--;
+        return;
     }
 
-    if (type != TypeUndefined) {
+    if (cameraType != TypeUndefined) {
         // Frame::get_img() really shouldn't be modifyable. Also this should probably be done when importing the images
         remap(f->get_img(), f->get_img(), map1, map2, INTER_CUBIC);
     }
@@ -248,7 +255,7 @@ int handle_args(int argc, char** argv) {
 
 #ifdef HAS_DECKLINK
         if (vm.count("decklink")) {
-            importer = new DecklinkImport(logReader = new MetadataInput(telemetry));
+            importer = new DecklinkImport(logReader);
         }
 #endif // HAS_DECKLINK
 
@@ -274,7 +281,7 @@ int handle_args(int argc, char** argv) {
             if (!vm.count("sizex") || !vm.count("sizey")) {
                 cout << "Invalid options, when using lens calibration you must specify size of frames" << endl;
             }
-            type = GoProStock;
+            cameraType = GoProStock;
             Mat cameraMatrix, distCoeffs; // Calculate these!
             Size size(vm["sizex"].as<int>(), vm["sizey"].as<int>());
             initUndistortRectifyMap(cameraMatrix, distCoeffs, Mat(), cameraMatrix, size, CV_32FC1, map1, map2);

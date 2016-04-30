@@ -133,6 +133,7 @@ BOOST_AUTO_TEST_CASE(hist_test){
         const Mat buffer=src;
         show = histFilter.filter(buffer);
         vector<vector<Point> > * results = lowCCreator.get_contours(*show);
+BOOST_TEST_MESSAGE("Now testing " << drnt->d_name);
         if (results->size() == 0) {
             BOOST_CHECK(expected.size() == results->size() == 0);
             BOOST_TEST_MESSAGE("No Target Found");

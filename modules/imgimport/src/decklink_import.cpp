@@ -53,7 +53,7 @@
 #include "decklink_import.h"
 
 using namespace boost;
-
+using namespace std;
 namespace logging = boost::log;
 
 std::vector<DeckLinkCapture> captures;
@@ -95,7 +95,7 @@ int DecklinkImport::initVideoSource()
 
 }
 
-int DeckLinkImport::startCapture(){
+int DecklinkImport::startCapture(){
     BOOST_FOREACH(DeckLinkCapture& capture, captures)
     {
         if (! capture.start()){
@@ -149,7 +149,7 @@ Frame* DecklinkImport::next_frame(){
     } catch (std::exception & e) {
         BOOST_LOG_TRIVIAL(error) << "Error reading metadata: " << e.what();
     }
-    Frame* img = new Frame(&oFrame, boost::lexical_cast<string>(time) + ".jpg", m);
+    Frame* img = new Frame(new cv::Mat(oFrame), boost::lexical_cast<string>(time) + ".jpg", m);
     return img;
 }
 #endif

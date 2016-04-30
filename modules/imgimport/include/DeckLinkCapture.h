@@ -44,7 +44,7 @@ class DeckLinkCapture
         std::string getDeviceModelName();
         std::string getDeviceDisplayName();
 
-        bool start(BMDDisplayMode displayMode = bmdModeHD1080p30, //FIXME: THIS CHANGES BASED ON THE DEVICE: CHECK THE DeckLinkAPIModes.h file and the BlackMagic Desktop Utility to get the input display mode
+        bool start(BMDDisplayMode displayMode = bmdModeHD720p60, //FIXME: THIS CHANGES BASED ON THE DEVICE: CHECK THE DeckLinkAPIModes.h file and the BlackMagic Desktop Utility to get the input display mode
             BMDPixelFormat pixelFormat = bmdFormat8BitYUV);
         void stop();
 

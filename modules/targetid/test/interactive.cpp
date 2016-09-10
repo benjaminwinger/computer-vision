@@ -14,6 +14,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/xfeatures2d.hpp"
+#include "opencv2/xfeatures2d/nonfree.hpp"
 #include <opencv2/imgproc.hpp>
 #include <vector>
 #include <iostream>
@@ -48,6 +51,20 @@ void refresh_image() {
     for( int i = 0; i< contours->size(); i++ ) {
         drawContours( drawing, *contours, i, color, 2, 8);
     }
+
+    int minHessian = 400;
+
+    xfeatures2d::SURF *detector = xfeatures2d::SurfFeatureDetector::create(minHessian);
+
+    vector<KeyPoint> keypoints;
+    Mat descriptors;
+
+    detector->detectAndCompute(drawing, Mat(), keypoints, descriptors);
+
+    //-- Draw keypoints
+    drawKeypoints(drawing, keypoints, drawing, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
+
+    // Resize to better fit on screen
     Size size(960,640);
     resize(drawing, dst, size);
     resize(filtered, filtered_dest, size);

@@ -13,25 +13,23 @@
  *  https://raw.githubusercontent.com/UWARG/computer-vision/master/COPYING.txt
  */
 
-
 #ifndef OBJECT_H_INCLUDED
 #define OBJECT_H_INCLUDED
-
-/**
- * @class Object
- *
- * @brief Container class for storing information about
- *     identified targets in real-world measurements
- *     Adding PixelObjects consolidates their information
- *     into the Object
- *
- */
 
 #include <opencv2/core/core.hpp>
 #include <vector>
 
 class PixelObject;
 
+/**
+ * @class Object
+ *
+ * @brief Container class for storing information about
+ *     identified targets in real-world measurements
+ *     Adding Objects merges their information
+ *     into the receiving Object
+ *
+ */
 class Object {
 public:
     Object(std::string type);
@@ -55,7 +53,7 @@ public:
      *
      * @return GPS co-ordinates of the Object
      */
-    cv::Point2f get_centroid();
+    Shadow * get_centroid();
 
     /**
      * @brief Getter for area
@@ -79,31 +77,19 @@ public:
     cv::Scalar get_colour();
 
     /**
-     * @brief Getter for error
-     *
-     * @return 2D error magnitude of the Object's location in metres
-     */
-    cv::Point2f get_error();
-
-    /**
-     * @brief Getter for error angle
-     *
-     * @return Angle in radians between the direction of the error and North
-     */
-    double get_error_angle();
-
-    /**
-     * @brief Adds given PixelObject to Object's storage
+     * @brief Adds given Object to Object's storage
      *        and recalculate target information
      *
-     * @param o PixelObject to be added
+     * Any subobjects of the given object
+     *
+     * @param o Object to be added
      */
     void add_object(Object * o);
 
     /**
      * @brief Getter for pixel Objects
      *
-     * @return Array containing all of the PixelObjects that were used to
+     * @return Array containing all of the Objects that were used to
      *         create this instance of Object
      */
     const std::vector<Object *> & get_objects();
@@ -127,7 +113,7 @@ private:
     /**
      * @brief GPS co-ordinates of the centre of the Object
      */
-    cv::Point2f centroid;
+    Shadow * centroid;
 
     /**
      * @brief area of the target in square metres
@@ -145,20 +131,16 @@ private:
     cv::Scalar colour;
 
     /**
-     * @brief Calculated location error of the target as a 2D rectangle in metres
+     * @brief Objects used to form this Object instance
+     * Each Object represents a specific instance of this Object (i.e. no nesting)
      */
-    cv::Point2f error;
+    std::vector<Object *> objects;
 
     /**
-     * @brief Angle of the error as degrees clockwise from North
+     * @brief The pixelObject represented by this object or NULL if this object is not a
+     *  direct representation of a PixelObject (i.e. it contains a collection of Objects)
      */
-    double errorAngle;
-
-    /**
-     * @brief PixelObjects used to form this Object instance
-     * Each PixelObject is a specific instance of this Object
-     */
-    std::vector<PixelObject *> pixelObjects;
+    PixelObject * pixelObject;
 };
 
 

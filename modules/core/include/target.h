@@ -16,21 +16,20 @@
 #ifndef TARGET_H_INCLUDED
 #define TARGET_H_INCLUDED
 
+#include <opencv2/core/core.hpp>
+#include <vector>
+#include "shadow.h"
+
+class Object;
+
 /**
  * @class Target
  *
  * @brief Container class for storing information about
- *     identified targets in real-world measurements
- *     Adding PixelTargets consolidates their information
- *     into the Target
- *
+ *    targets. A target may consist of one or more Objects.
+ *    If there are multiple objects in a target, they represent distinct and non-intersecting
+ *    sections of a multi-part target (e.g. Marked corners of an area)
  */
-
-#include <opencv2/core/core.hpp>
-#include <vector>
-
-class Object;
-
 class Target{
 public:
     Target(std::string type);
@@ -54,7 +53,7 @@ public:
      *
      * @return GPS co-ordinates of the Target
      */
-    cv::Point2f get_centroid();
+    Shadow * get_centroid();
 
     /**
      * @brief Getter for area
@@ -78,26 +77,12 @@ public:
     cv::Scalar get_colour();
 
     /**
-     * @brief Getter for error
-     *
-     * @return 2D error magnitude of the Target's location in metres
-     */
-    cv::Point2f get_error();
-
-    /**
-     * @brief Getter for error angle
-     *
-     * @return Angle in radians between the direction of the error and North
-     */
-    double get_error_angle();
-
-    /**
      * @brief Adds given PixelTarget to Target's storage
      *        and recalculate target information
      *
-     * @param t PixelTarget to be added
+     * @param t Object to be added
      */
-    void add_object(Object * t);
+    void add_object(Object * object);
 
     /**
      * @brief Getter for pixel Targets
@@ -119,15 +104,15 @@ private:
     double imageQuality;
 
     /**
-     * @brief PixelTarget type description 
+     * @brief PixelTarget type description
      */
     std::string type;
 
     /**
-     * @brief GPS co-ordinates of the centre of the Target
+     * @brief GPS co-ordinates of the centre of the Target including their error
      */
-    cv::Point2f centroid;
-    
+    Shadow * centroid;
+
     /**
      * @brief area of the target in square metres
      */
@@ -142,16 +127,6 @@ private:
      * @brief Colour of the target in BGR (Blue, Green, Red) format
      */
     cv::Scalar colour;
-
-    /**
-     * @brief Calculated location error of the target as a 2D rectangle in metres
-     */
-    cv::Point2f error;
-
-    /**
-     * @brief Angle of the error as degrees clockwise from North
-     */
-    double errorAngle;
 
     /**
      * @brief Distinct Objects used to form this Target instance

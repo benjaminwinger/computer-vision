@@ -3,13 +3,17 @@ enable_testing()
 if(Boost_FOUND AND OpenCV_FOUND)
     add_definitions("-DBOOST_LOG_DYN_LINK")
     add_executable(qr_test qr_test.cpp)
+    add_executable(warg-cv-ml-train ml_train.cpp)
     add_executable(targetid_test_contour test.cpp)
+    add_executable(train_HOG train_HOG.cpp)
     target_link_libraries(targetid_test_contour ${OpenCV_LIBS} ${Boost_LIBRARIES} Core TargetIdentification)
     target_link_libraries(qr_test ${OpenCV_LIBS} ${Boost_LIBRARIES} ${ZBAR_LIBRARIES} Core TargetIdentification)
     add_executable(targetid_test_interactive interactive.cpp)
     target_link_libraries(targetid_test_interactive ${OpenCV_LIBS} ${Boost_LIBRARIES} Core TargetIdentification)
+    target_link_libraries(warg-cv-ml-train ${OpenCV_LIBS} ${Boost_LIBRARIES} Core TargetIdentification)
+    target_link_libraries(train_HOG ${OpenCV_LIBS} ${Boost_LIBRARIES} Core TargetIdentification)
 
-    install(TARGETS targetid_test_interactive DESTINATION bin)
+    install(TARGETS targetid_test_interactive warg-cv-ml-train train_HOG DESTINATION bin)
 
     # Tests
     add_test("SimpleTarget" targetid_test_contour ${TESTDATA_DIR}/photos/IMG_1644.jpg --log_format=XML --log_sink=TEST-boost.xml --log_level=all --report_level=no)

@@ -40,28 +40,29 @@
  */
 
 #include <opencv2/core/core.hpp>
-#include "metadata.h"
 #include <vector>
+#include "json_serializable.h"
+#include "metadata.h"
 
 class PixelObject;
 
-class Frame{
+class Frame : JsonSerializable {
 public:
     Frame(cv::Mat * img, std::string id, Metadata m);
-    
+
     /**
-     * @brief 
+     * @brief
      *
      * @return timestamp identifier for the frame
      */
     std::string get_id();
 
     /**
-     * @brief 
+     * @brief
      *
      * @return image associated with the frame
      */
-    cv::Mat & get_img(); 
+    cv::Mat & get_img();
 
     /**
      * @brief Adds given object to the list of objects in the frame
@@ -77,7 +78,7 @@ public:
      */
     std::vector<PixelObject *> & get_objects();
 
-    /** 
+    /**
      * @brief getter for metadata
      *
      * @return const pointer to internal metadata structure
@@ -90,10 +91,12 @@ public:
      */
     void save(std::string dir);
 
+    virtual std::shared_ptr<Json::Value> serialize();
+
 private:
-    
+
     /**
-     * @brief image associated with the Frame 
+     * @brief image associated with the Frame
      */
     cv::Mat * img;
 

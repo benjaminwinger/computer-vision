@@ -13,6 +13,7 @@ find_package(Boost REQUIRED filesystem log thread system program_options unit_te
 find_package(Threads)
 find_package(DeckLinkSDK)
 find_package(Exiv2 REQUIRED)
+find_package(jsoncpp REQUIRED)
 
 message(status " Boost Include: ${Boost_INCLUDE_DIR}")
 message(status " Boost Libraries: ${Boost_LIBRARIES}")
@@ -22,6 +23,8 @@ message(status " DeckLink Include: ${DeckLinkSDK_INCLUDE_PATH}")
 message(status " DeckLink Libraries: ${DeckLinkSDK_LIBS}")
 message(status " Exiv2 Include: ${EXIV2_INCLUDE_DIR}")
 message(status " Exiv2 Libraries: ${EXIV2_LIBRARIES}")
+message(status " JsonCpp Include: ${jsoncpp_INCLUDE_DIRS}")
+message(status " JsonCpp Libraries: ${jsoncpp_LIBRARIES}")
 
 if(NOT Threads_FOUND)
     message(warning " Threads library not found. Proceed with caution")

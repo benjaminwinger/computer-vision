@@ -34,6 +34,7 @@
 #include <boost/lexical_cast.hpp>
 #include <sstream>
 #include <iomanip>
+#include <memory>
 #include "frame.h"
 #include "pixel_object.h"
 
@@ -72,4 +73,14 @@ void Frame::save(std::string dir) {
     ss << std::setprecision(12) << data.lat << " " << data.lon << " " << data.altitude << " " << data.heading << " " << data.time;
     exifData["Exif.Photo.UserComment"] = ss.str();
     image->writeMetadata();
+}
+
+std::shared_ptr<Json::Value> Frame::serialize() {
+    Json::Value *root = new Json::Value();
+    (*root)["id"] = get_id();
+    (*root)["width"] = img->cols;
+    (*root)["height"] = img->rows;
+    (*root)["type"] = img->type();
+    (*root)["img"] = img->data;
+    return std::shared_ptr<Json::Value>(root);
 }

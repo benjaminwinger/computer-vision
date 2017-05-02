@@ -122,8 +122,8 @@ double fisheyeDistortion[] = {
 };
 
 double newFisheyeMatrix[] = {
-    2080, 0, 960,
-    0, 2080, 540,
+    2120, 0, 960,
+    0, 2120, 540,
     0, 0, 1
 };
 

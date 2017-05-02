@@ -110,7 +110,11 @@ public:
      */
     const std::vector<PixelObject *> & get_pobjects();
 
+    std::stringstream serialize();
+
+    void write_images(std::string dir);
 private:
+    int id;
 
     /**
      * @brief Cropped Image of the Object

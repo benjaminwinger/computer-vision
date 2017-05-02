@@ -14,16 +14,24 @@
  */
 
 
+#include <opencv2/highgui.hpp>
 #include "object.h"
 #include "pixel_object.h"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
-Object::Object(){
+using namespace std;
+static int idCounter = 0;
+
+Object::Object(): id(idCounter++){
 
 }
 
+
 void Object::add_pobject(PixelObject * po){
     pixelObjects.push_back(po);
-    
+
     //Update the Object parameters
     int n = Object::pixelObjects.size();
     if (n > 1){
@@ -81,7 +89,55 @@ void Object::recalculate(){
 }
 
 const std::vector<PixelObject*>& Object::get_pobjects(){
-    return pixelObjects; 
+    return pixelObjects;
 }
 
+// Serialize a cv::Mat to a stringstream
+stringstream serialize_mat(cv::Mat input) {
+    // We will need to also serialize the width, height, type and size of the matrix
+    int width = input.cols;
+    int height = input.rows;
+    int type = input.type();
+    size_t size = input.total() * input.elemSize();
+
+    // Initialize a stringstream and write the data
+    stringstream ss;
+    ss.write((char*)(&width), sizeof(int));
+    ss.write((char*)(&height), sizeof(int));
+    ss.write((char*)(&type), sizeof(int));
+    ss.write((char*)(&size), sizeof(size_t));
+
+    // Write the whole image data
+    ss.write((char*)input.data, size);
+
+    return ss;
+}
+
+stringstream Object::serialize() {
+    stringstream ss;
+    ss << "{" << endl;
+    ss << "\"id\":" << id << "," << endl;
+    ss << std::setprecision(12) << "\"centroid\":{\"x\":" << centroid.x << ",\"y\":" << centroid.y << "}," << endl;
+    ss << "\"colour\":{\"b\":" << colour[0] << ",\"g\":" << colour[1] << ",\"r\":" << colour[2] << "}," << endl;
+    ss << "\"images\":[";
+    /*for (PixelObject *po : pixelObjects) {
+        stringstream serializedStream = serialize_mat(po->get_cropped_image());
+        base64::encoder E;
+        stringstream encoded;
+        E.encode(serializedStream, encoded);
+        ss << encoded.str() << "," << endl;
+    }*/
+    ss << "]" <<endl;;
+    ss << "}";
+    return ss;
+}
+
+void Object::write_images(string dir) {
+    int i = 0;
+    for (PixelObject *po : pixelObjects) {
+        stringstream path;
+        path << dir << "/" << id << "-" << i << ".jpg";
+        imwrite(path.str(), po->get_cropped_image());
+    }
+}
 

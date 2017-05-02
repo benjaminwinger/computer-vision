@@ -447,6 +447,23 @@ vector<Command> commands = {
     }),
     Command("frames.source.update_delay", "Updates the delay for the source at the given index", {"index", "delay"}, [=](State &newState, vector<string> args) {
         importer.update_delay(stoi(args[0]), stol(args[1]));
+    }),
+    Command("objects.serialize", "Serialize objects to file", {"file_name"}, [=](State &newState, vector<string> args) {
+        std::ofstream ofs (args[0], std::ofstream::out);
+
+        ofs << "[" << endl;
+
+        vector<Object*> objects = TargetAnalyzer::getInstance()->extract_objects();
+        for (Object *o : objects) {
+            ofs << o->serialize().str() << endl;
+            o->write_images(outputDir);
+        }
+        ofs << "]" << endl;
+        ofs.close();
+    }),
+    Command("objects.cluster.species", "Assigns species based on colour", {"num_species"}, [=](State &newState, vector<string> args) {
+        vector<Object*> objects = TargetAnalyzer::getInstance()->extract_objects();
+        // TODO: Cluster by colour and num_species
     })
 };
 

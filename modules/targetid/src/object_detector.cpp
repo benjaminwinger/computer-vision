@@ -69,6 +69,14 @@ void ObjectDetector::process_frame(Frame * f){
         Mat mask = Mat::zeros(f->get_img().size(), CV_8UC1);
         drawContours(mask, vector<vector<Point> >({contour}), 0, Scalar(255), CV_FILLED);
         colour = mean(f->get_img(), mask);
+        Rect bounds = boundingRect(contour);
+        try {
+        crop = f->get_img()(Range(bounds.y - bounds.height * 0.2, bounds.y + 1.2 * bounds.height), Range(bounds.x - bounds.width * 0.2, bounds.x + 1.2 * bounds.width));
+        } catch (cv::Exception *e) {
+
+        } catch (cv::Exception e) {
+
+        }
 
         PixelObject * p = new PixelObject(crop, contour, centroid, area, perimeter, colour, error, errorAngle);
         f->add_object(p);

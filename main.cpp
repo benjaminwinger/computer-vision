@@ -153,6 +153,12 @@ Camera goProRect(
     )
 );
 
+Camera sonyA6000(
+    Size(6000,4000),
+    Size2d(78.48, 57.32),
+    Mat(), Mat(), Mat(), false
+);
+
 struct State {
     bool hasImageSource;
     bool hasMetadataSource;

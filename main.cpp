@@ -189,12 +189,18 @@ void worker(Frame* f) {
     assert(!f->get_img().empty());
     identifier.process_frame(f);
     int poSize = f->get_objects().size();
-    if ((intermediate && poSize > 0) || videoFeed) {
-        intermediate_buffer.push(f);
-    }
 
     for (int i = 0; i < poSize; i++){
         poBuffer.push(f->get_objects()[i]);
+    }
+
+    if ((intermediate && poSize > 0) || videoFeed) {
+        // If we want to output it as an interesting frame or display it in the videofeed keep the frame
+        intermediate_buffer.push(f);
+    } else {
+        // Otherwise we don't have any further use for it
+        delete f;
+        f = NULL;
     }
 
     workers--;
@@ -259,6 +265,9 @@ void output() {
                 resize(tmp, resized, Size(((double)tmp.cols / tmp.rows) * 600, 600));
                 imshow("Live Feed", resized);
                 waitKey(1);
+            }
+            if (f->get_objects().size() == 0) {
+                delete f;
             }
             intermediate_buffer.pop();
         }

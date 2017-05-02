@@ -105,7 +105,7 @@ TargetIdentifier identifier;
 TargetAnalyzer * analyzer = NULL;
 MetadataInput *logReader = new MetadataInput();
 
-vector<PixelObject *> poBuffer;
+queue<PixelObject *> poBuffer;
 
 double aveFrameTime = 1000;
 int frameCount = 0;
@@ -193,10 +193,8 @@ void worker(Frame* f) {
         intermediate_buffer.push(f);
     }
 
-    //Analyze the image after it is identified
-    analyzer = TargetAnalyzer::getInstance();
     for (int i = 0; i < poSize; i++){
-        poBuffer.push_back(f->get_objects()[i]);
+        poBuffer.push(f->get_objects()[i]);
     }
 
     workers--;
@@ -220,9 +218,12 @@ void assign_workers() {
 }
 
 void analyze() {
+    //Analyze the image after it is identified
+    analyzer = TargetAnalyzer::getInstance();
     while (poBuffer.size() > 0 || currentState.readingImages || workers > 0) {
         if (poBuffer.size() > 0) {
-            analyzer->analyze_pixelobject(poBuffer[0]);
+            analyzer->analyze_pixelobject(poBuffer.front());
+            poBuffer.pop();
         }
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }

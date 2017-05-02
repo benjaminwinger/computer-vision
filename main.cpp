@@ -414,7 +414,7 @@ vector<Command> commands = {
         if (logReader->num_sources() == 0) {
             BOOST_LOG_TRIVIAL(error) << "Cannot add image source until a metadata source has been specified";
         } else {
-            importer.add_source(new PictureImport(args[0], logReader, goProFisheye), stol(args[1]));
+            importer.add_source(new PictureImport(args[0], logReader, goProRect), stol(args[1]));
             newState.hasImageSource = true;
         }
     }),
@@ -551,14 +551,14 @@ int handle_args(int argc, char** argv) {
 
         if (vm.count("images")) {
             string path = vm["images"].as<string>();
-            importer.add_source(new PictureImport(path, logReader, goProFisheye), 0);
+            importer.add_source(new PictureImport(path, logReader, goProRect), 0);
             newState.hasImageSource = true;
             cout << "Adding picture source..." << endl;
         }
 
         if (vm.count("videofile")) {
             string path = vm["videofile"].as<string>();
-            importer.add_source(new VideoImport(path, logReader, goProRect, 0), 100);
+            importer.add_source(new VideoImport(path, logReader, goProFisheye, 0), 100);
             newState.hasImageSource = true;
             cout << "Adding video source..." << endl;
         }

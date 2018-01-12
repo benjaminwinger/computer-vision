@@ -87,3 +87,7 @@ void Frame::save(std::string dir) {
     exifData["Exif.Photo.UserComment"] = ss.str();
     image->writeMetadata();
 }
+
+Camera & Frame::get_camera() {
+    return camera;
+}

@@ -36,19 +36,18 @@ Mat * Camera::undistort(Mat & img) {
 
 Camera Camera::TestCamera() {
     double cameraMatrix[] = {
-        2.4052826789763981e+03, 0, 2000,
-        0, 2.4052826789763981e+03, 1500,
+        2410, 0, 3000,
+        0, 2410, 2000,
         0, 0, 1
     };
 
     double distMatrix[] = {
-        6.0190515380007324e-02, -1.8618345553370965e+00, 0, 0,
-        2.9590336363673964e+00
+        0, 0, 0, 0, 0
     };
 
     return Camera(
-        Size(4000, 3000),
-        Size2d(120, 90),
+        Size(6000, 4000),
+        Size2d(73.74, 53.13),
         Mat(
             Size(3, 3),
             CV_8UC1,

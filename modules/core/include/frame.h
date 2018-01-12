@@ -106,6 +106,13 @@ public:
      */
     cv::Mat* undistort(Camera &camera);
 
+    /**
+     * @brief Camera associated with the frame
+     *
+     * @return Camera associated with the frame
+     */
+    Camera & get_camera();
+
 private:
     
     /**

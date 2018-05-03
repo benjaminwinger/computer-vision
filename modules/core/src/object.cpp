@@ -17,8 +17,20 @@
 #include "object.h"
 #include "pixel_object.h"
 
-Object::Object(){
+Object::Object(PixelObject *po){
+    cv::Point2d maxDistance = this->error + this->centroid;
+    if (sqrt(pow(maxDistance.x,2) + pow(maxDistance.y,2)) < sqrt(pow(po->get_gps_centroid().x,2) + pow(po->get_gps_centroid().y,2))){
+	maxDistance = po->get_gps_centroid();
+    }
 
+    this->centroid = this->centroid*ratio + po->get_gps_centroid()/((double)n+1);
+    this->area = this->area*ratio + po->get_gps_area()/((double)n+1);
+    this->colour = this->colour*ratio + po->get_colour()/((double)n+1);
+
+
+    //TODO: Determine image quality, choose best image
+    this->error = maxDistance - this->centroid;
+    this->errorAngle = atan2(this->centroid.y - maxDistance.y, this->centroid.x - maxDistance.x);
 }
 
 void Object::add_object(Object * o){

@@ -67,28 +67,6 @@ public:
     cv::Scalar get_colour();
 
     /**
-     * @brief Getter for GPS centroid
-     *
-     * @return GPS location of the Object in its frame
-     */
-    cv::Point2d get_gps_centroid();
-
-    /**
-     * @brief Setter for GPS centroid
-     *
-     * @param gps The GPS centroid of the Object in its frame
-     */
-    void set_gps_centroid(cv::Point2d gps);
-
-    /**
-     * @brief Getter for area
-     *
-     * @return Area of the Object in meters
-     */
-    double get_gps_area();
-
-
-    /**
      * @brief Getter for error
      *
      * @return 2D error magnitude of the Object's location
@@ -130,23 +108,9 @@ private:
     cv::Point2d centroid;
 
     /**
-     * @brief GPS location of the centre of the PixelObject. This is calculated
-     * from PixelObject::centroid after targetanalysis.
-     */
-    cv::Point2d gps_centroid;
-
-
-    /**
      * @brief area of the target in pixels
      */
     double area;
-
-    /**
-     * @brief area of the target in meters. This is computed after
-     * targetanalysis has been completed.
-     */
-    double gps_area;
-
 
     /**
      * @brief perimeter of the target in pixels

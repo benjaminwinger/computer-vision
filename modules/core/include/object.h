@@ -36,6 +36,10 @@ class PixelObject;
 
 class Object {
 public:
+    /**
+     * @brief Creates object from a PixelObject and converts data to real-world units
+     *
+     */
     Object(PixelObject *po);
 
     /**

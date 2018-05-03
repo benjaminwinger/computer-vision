@@ -1,4 +1,4 @@
-include_directories(include ../core/include)
+include_directories(include ../core/include ../targetid/include)
 ADD_DEFINITIONS("-DBOOST_LOG_DYN_LINK")
 add_library(TargetAnalysis src/area_analyzer.cpp src/target_analyzer.cpp src/target_loader.cpp src/gps.cpp)
 target_link_libraries(TargetAnalysis ${Boost_LIBRARIES} Core)

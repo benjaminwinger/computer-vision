@@ -4,7 +4,11 @@
  *
  * @section LICENSE
  *
+<<<<<<< Updated upstream
  * Copyright (c) 2015-2016, Waterloo Aerial Robotics Group (WARG)
+=======
+ * Copyright (c) 2015-2017, Waterloo Aerial Robotics Group (WARG)
+>>>>>>> Stashed changes
  * All rights reserved.
  *
  * This software is licensed under a modified version of the BSD 3 clause license

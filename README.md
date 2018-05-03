@@ -27,11 +27,11 @@ CONOPS/Rules:
 
 **Build system**: CMake to set up build environment then whatever CMake gives you (depends on platform, make for Linux, etc.)
 
-**Dependencies**: 
+**Dependencies**:
     [OpenCV 3.X](https://opencv.org/releases.html),
     [Boost 1.58](http://www.boost.org/users/download/),
     [DeckLink](http://www.blackmagicdesign.com/support/sdks) _(optional)_,
-    [ZBar](http://zbar.sourceforge.net/download.html) 
+    [ZBar](http://zbar.sourceforge.net/download.html)
 
 Note on DeckLink Dependencies: The most recent tested SDK is: "Desktop Video 10.9.5 SDK". When downloaded, rename the extracted folder to "DeckLinkSDK", then copy the entire folder into the /usr/local/include directory, such that /usr/local/include/DeckLinkSDK/Linux/include exists.
 Note on OpenCV: Help for installing OpenCV can be found [here](https://www.learnopencv.com/install-opencv3-on-ubuntu/) if installing from source.
@@ -41,14 +41,14 @@ If you intend to use Windows or Mac, you will need to run a Docker image. The Do
 
 *For Linux:*
 
-1. Install the dependencies listed above. This may vary based on your system. 
+1. Install the dependencies listed above. This may vary based on your system.
 2. Clone the Project
 3. Run `./build.sh` to build and compile the project.
 
 Refer to the detailed instructions here: [Linux Installation](http://docs.uwarg.com/computer-vision/Building-the-project-[Linux]/)
 
 #### Running the Program
-After compiling, an executable will be present in the build directory. To run it type: 
+After compiling, an executable will be present in the build directory. To run it type:
 
 `./warg-cv`
 
@@ -64,7 +64,7 @@ To fill this chart with the right values:
 This evaluation sheet includes spots to fill with latitudes, longitudes, centroids, areas, volumes, and QR code values.
 
 ### Licensing
-Copyright (c) 2015-2016, Waterloo Aerial Robotics Group (WARG)
+Copyright (c) 2015-2018, Waterloo Aerial Robotics Group (WARG)
 
 All rights reserved.
 
@@ -76,9 +76,9 @@ modification, are permitted provided that the following conditions are met:
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
-3. Usage of this code MUST be explicitly referenced to WARG and this code 
+3. Usage of this code MUST be explicitly referenced to WARG and this code
    cannot be used in any competition against WARG.
-4. Neither the name of the WARG nor the names of its contributors may be used 
+4. Neither the name of the WARG nor the names of its contributors may be used
    to endorse or promote products derived from this software without specific
    prior written permission.
 

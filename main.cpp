@@ -1,7 +1,7 @@
 /*
     This file is part of WARG's computer-vision
 
-    Copyright (c) 2015, Waterloo Aerial Robotics Group (WARG)
+    Copyright (c) 2015-2018, Waterloo Aerial Robotics Group (WARG)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@
 #include <fstream>
 #include "frame.h"
 #include "target_identifier.h"
+#include "target_analyzer.h"
 #include "imgimport.h"
 #include "importer.h"
 #include "decklink_import.h"
@@ -85,6 +86,7 @@ Frame* next_image();
 int handle_args(int argc, char** argv);
 void handle_input();
 void handle_state_change();
+queue<Frame*> in_buffer;
 queue<Target*> out_buffer;
 queue<Frame*> intermediate_buffer;
 
@@ -101,6 +103,7 @@ bool videoFeed = false;
 // Processing module classes
 Importer importer;
 TargetIdentifier identifier;
+TargetAnalyzer * analyzer = NULL;
 MetadataInput *logReader = new MetadataInput();
 
 double aveFrameTime = 1000;
@@ -183,8 +186,15 @@ void worker(Frame* f) {
     workers++;
     assert(!f->get_img().empty());
     identifier.process_frame(f);
-    if ((intermediate && f->get_objects().size() > 0) || videoFeed) {
+    int poSize = f->get_objects().size();
+    if ((intermediate && poSize > 0) || videoFeed) {
         intermediate_buffer.push(f);
+    }
+
+    //Analyze the image after it is identified
+    analyzer = TargetAnalyzer::getInstance();
+    for (int i = 0; i < poSize; i++){
+	analyzer->analyze_pixelobject(f->get_objects()[i]);
     }
 
     workers--;
@@ -399,7 +409,7 @@ vector<Command> commands = {
     }),
 #endif // HAS_DECKLINK
     Command("frames.source.remove", "Removes the source at the given index", {"index"}, [=](State &newState, vector<string> args) {
-        if (importer.num_sources() <= stoi(args[0])) throw std::runtime_error(string("Not a valid index: ") + args[0]);
+    if (importer.num_sources() <= stoi(args[0])) throw std::runtime_error(string("Not a valid index: ") + args[0]);
         importer.remove_source(stoi(args[0]));
         newState.hasImageSource = importer.num_sources() > 0;
     }),
